@@ -21,6 +21,14 @@ namespace ORM.Configuration
             HasMany(e => e.Images)
                 .WithRequired(e => e.Post)
                 .WillCascadeOnDelete(true);
+            HasMany(e => e.Tags)
+                .WithMany(e => e.Posts)
+                .Map(e =>
+                {
+                    e.MapLeftKey("PostRefId");
+                    e.MapRightKey("TagRefId");
+                    e.ToTable("PostTag");
+                });
         }
     }
 }

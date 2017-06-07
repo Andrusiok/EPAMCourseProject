@@ -9,22 +9,9 @@ namespace DAL.Interfaces.DTO
 {
     public class DALUser : IDALEntity
     {
-        #region private fields
-        private int id;
-        #endregion
-
-
-        public int Id
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Password { get; set; }
+        public string Mail { get; set; }
     }
 }
