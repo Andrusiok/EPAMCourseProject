@@ -40,6 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DTO\DALBlog.cs" />
+    <Compile Include="DTO\DALComment.cs" />
+    <Compile Include="DTO\DALImage.cs" />
+    <Compile Include="DTO\DALLike.cs" />
+    <Compile Include="DTO\DALPost.cs" />
+    <Compile Include="DTO\DALTag.cs" />
     <Compile Include="DTO\DALUser.cs" />
     <Compile Include="Interfaces\IDALEntity.cs" />
     <Compile Include="Interfaces\IRepository.cs" />

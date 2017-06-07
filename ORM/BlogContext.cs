@@ -7,7 +7,7 @@ using ORM.Configuration;
 
 namespace ORM
 {
-    class BlogContext:DbContext
+    public class BlogContext:DbContext
     {
         static BlogContext()
         {
