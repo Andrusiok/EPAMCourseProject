@@ -49,7 +49,7 @@ namespace DAL.Repositories
 
         public DALBlog Get(int id)
         {
-            Blog ormBlog = _context.Set<Blog>().FirstOrDefault(e => e.UserId == id);
+            Blog ormBlog = _context.Set<Blog>().FirstOrDefault(e => e.BlogId == id);
 
             return ormBlog?.ToDALEntity();
         }

@@ -2,22 +2,36 @@
 using DAL.Interfaces.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace DAL
 {
     public class UnitOfWork : IUnitOfWork
     {
+        public DbContext Context { get; private set; }
+
+        public UnitOfWork(DbContext context)
+        {
+            Context = context;
+        }
+
         public void Commit()
         {
-            throw new NotImplementedException();
+            if (Context != null)
+                try
+                {
+                    Context.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Can't commit changes to database", e);
+                }
         }
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            if (Context != null)
+                Context.Dispose();
         }
     }
 }

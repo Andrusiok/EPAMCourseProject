@@ -52,7 +52,7 @@ namespace DAL.Repositories
 
         public DALComment Get(int id)
         {
-            Comment ormUser = _context.Set<Comment>().FirstOrDefault(e => e.UserId == id);
+            Comment ormUser = _context.Set<Comment>().FirstOrDefault(e => e.CommentId == id);
 
             return ormUser?.ToDALEntity();
         }

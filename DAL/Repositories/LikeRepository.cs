@@ -50,7 +50,7 @@ namespace DAL.Repositories
 
         public DALLike Get(int id)
         {
-            Like ormLikes = _context.Set<Like>().FirstOrDefault(e => e.UserId == id);
+            Like ormLikes = _context.Set<Like>().FirstOrDefault(e => e.LikeId == id);
 
             return ormLikes?.ToDALEntity();
         }
