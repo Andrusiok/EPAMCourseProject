@@ -11,11 +11,11 @@ namespace DAL.Interfaces
     {
         IEnumerable<T> GetAll();
 
-        IEnumerable<T> GetAll(Predicate<T> predicate);
+        IEnumerable<T> GetAll(Expression<Func<T, bool>> predicate);
 
         T Get(int id);
 
-        T Get(Expression<T> predicate);
+        T Get(Expression<Func<T, bool>> predicate);
 
         void Create(T item);
 

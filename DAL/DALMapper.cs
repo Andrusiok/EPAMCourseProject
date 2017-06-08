@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using DAL.Interfaces.DTO;
@@ -11,7 +12,7 @@ namespace DAL
     public static class DALMapper
     {
         #region toDALEntity
-        public static DALUser toDALEntity(this User item)
+        public static DALUser ToDALEntity(this User item)
         {
             return new DALUser()
             {
@@ -24,7 +25,7 @@ namespace DAL
             };
         }
 
-        public static DALBlog toDALEntity(this Blog item)
+        public static DALBlog ToDALEntity(this Blog item)
         {
             return new DALBlog()
             {
@@ -33,7 +34,7 @@ namespace DAL
             };
         }
 
-        public static DALPost toDALEntity(this Post item)
+        public static DALPost ToDALEntity(this Post item)
         {
             return new DALPost()
             {
@@ -44,7 +45,7 @@ namespace DAL
             };
         }
 
-        public static DALComment toDALEntity(this Comment item)
+        public static DALComment ToDALEntity(this Comment item)
         {
             return new DALComment()
             {
@@ -56,7 +57,7 @@ namespace DAL
             };
         }
 
-        public static DALLike toDALEntity(this Like item)
+        public static DALLike ToDALEntity(this Like item)
         {
             return new DALLike()
             {
@@ -66,7 +67,7 @@ namespace DAL
             };
         }
 
-        public static DALImage toDALEntity(this Image item)
+        public static DALImage ToDALEntity(this Image item)
         {
             return new DALImage()
             {
@@ -76,7 +77,7 @@ namespace DAL
             };
         }
 
-        public static DALTag toDALEntity(this Tag item)
+        public static DALTag ToDALEntity(this Tag item)
         {
             return new DALTag()
             {
@@ -86,6 +87,82 @@ namespace DAL
         }
         #endregion
 
+        #region ConvertExpression
+        public static Expression<Func<User, bool>> ConvertExpression(this Expression<Func<DALUser, bool>> f)
+        {
+            Expression<Func<User, DALUser>> convert =
+                bar => bar.ToDALEntity();
 
+            var param = Expression.Parameter(typeof(Blog), "bar");
+            var body = Expression.Invoke(f, Expression.Invoke(convert, param));
+            return Expression.Lambda<Func<User, bool>>(body, param);
+        }
+
+        public static Expression<Func<Blog, bool>> ConvertExpression(this Expression<Func<DALBlog, bool>> f)
+        {
+            Expression<Func<Blog, DALBlog>> convert = bar => bar.ToDALEntity();
+
+            var param = Expression.Parameter(typeof(Blog), "bar");
+            var body = Expression.Invoke(f,
+                Expression.Invoke(convert, param));
+
+            return Expression.Lambda<Func<Blog, bool>>(body, param);
+        }
+
+        public static Expression<Func<Post, bool>> ConvertExpression(this Expression<Func<DALPost, bool>> f)
+        {
+            Expression<Func<Post, DALPost>> convert = bar => bar.ToDALEntity();
+
+            var param = Expression.Parameter(typeof(Post), "bar");
+            var body = Expression.Invoke(f,
+                Expression.Invoke(convert, param));
+
+            return Expression.Lambda<Func<Post, bool>>(body, param);
+        }
+
+        public static Expression<Func<Like, bool>> ConvertExpression(this Expression<Func<DALLike, bool>> f)
+        {
+            Expression<Func<Like, DALLike>> convert = bar => bar.ToDALEntity();
+
+            var param = Expression.Parameter(typeof(Like), "bar");
+            var body = Expression.Invoke(f,
+                Expression.Invoke(convert, param));
+
+            return Expression.Lambda<Func<Like, bool>>(body, param);
+        }
+
+        public static Expression<Func<Comment, bool>> ConvertExpression(this Expression<Func<DALComment, bool>> f)
+        {
+            Expression<Func<Comment, DALComment>> convert = bar => bar.ToDALEntity();
+
+            var param = Expression.Parameter(typeof(Like), "bar");
+            var body = Expression.Invoke(f,
+                Expression.Invoke(convert, param));
+
+            return Expression.Lambda<Func<Comment, bool>>(body, param);
+        }
+
+        public static Expression<Func<Image, bool>> ConvertExpression(this Expression<Func<DALImage, bool>> f)
+        {
+            Expression<Func<Image, DALImage>> convert = bar => bar.ToDALEntity();
+
+            var param = Expression.Parameter(typeof(Like), "bar");
+            var body = Expression.Invoke(f,
+                Expression.Invoke(convert, param));
+
+            return Expression.Lambda<Func<Image, bool>>(body, param);
+        }
+
+        public static Expression<Func<Tag, bool>> ConvertExpression(this Expression<Func<DALTag, bool>> f)
+        {
+            Expression<Func<Image, DALImage>> convert = bar => bar.ToDALEntity();
+
+            var param = Expression.Parameter(typeof(Like), "bar");
+            var body = Expression.Invoke(f,
+                Expression.Invoke(convert, param));
+
+            return Expression.Lambda<Func<Tag, bool>>(body, param);
+        }
+        #endregion
     }
 }

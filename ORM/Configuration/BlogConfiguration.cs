@@ -11,7 +11,7 @@ namespace ORM.Configuration
     {
         public BlogConfiguration()
         {
-            HasKey(e => e.BlogId);
+            HasKey(c => c.BlogId);
             HasOptional(e => e.User)
                 .WithRequired(e=>e.Blog)
                 .WillCascadeOnDelete(true);

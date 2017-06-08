@@ -22,7 +22,7 @@ namespace DAL.Repositories
             throw new NotImplementedException();
         }
 
-        public DALPost Get(Expression<DALPost> predicate)
+        public DALPost Get(Expression<Func<DALPost, bool>> predicate)
         {
             throw new NotImplementedException();
         }
@@ -37,7 +37,7 @@ namespace DAL.Repositories
             throw new NotImplementedException();
         }
 
-        public IEnumerable<DALPost> GetAll(Predicate<DALPost> predicate)
+        public IEnumerable<DALPost> GetAll(Expression<Func<DALPost, bool>> predicate)
         {
             throw new NotImplementedException();
         }

@@ -18,9 +18,7 @@ namespace ORM
 
             context.Users.Add(new User { UserName = "Andrew", RoleId = 1, Password = "qwerty" });
             context.Users.Add(new User { UserName = "Mathew", RoleId = 2, Password = "qwerty" });
-            context.Users.Add(new User { UserName = "Basil", RoleId = 2, Password = "qwerty" });
-            context.Users.Add(new User { UserName = "Kate", RoleId = 2, Password = "qwerty" });
-            context.Users.Add(new User { UserName = "Mate", RoleId = 2, Password = "qwerty" });
+            context.Blogs.Add(new Blog { UserId = 2 });
             context.SaveChanges();
 
         }

@@ -1,80 +1,90 @@
-﻿using DAL.Interfaces;
-using ORM;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using System.Linq.Expressions;
+using DAL.Interfaces;
 using DAL.Interfaces.DTO;
+using ORM;
+using System.Data.Entity;
+using System.Data.Entity.Migrations;
+using LinqKit;
+using System.Collections.Generic;
+using System.Collections;
+using System;
+using System.Linq;
 
 namespace DAL.Repositories
 {
     public class BlogRepository : IRepository<DALBlog>
     {
-        public void Create(DALBlog item)
+        private readonly DbContext _context;
+
+        public BlogRepository(DbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public void Create(Blog item)
+        public void Create(DALBlog item)
         {
-            throw new NotImplementedException();
+            _context.Set<Blog>().Add(new Blog()
+            {
+                UserId = item.UserID,
+                User = _context.Set<User>().Find(item.UserID)
+            });
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            Blog blog = _context.Set<Blog>().Find(id);
+
+            if (blog != null) _context.Set<Blog>().Remove(blog);
         }
 
-        public DALBlog Get(Expression<DALBlog> predicate)
+        public DALBlog Get(Expression<Func<DALBlog, bool>> predicate)
         {
-            throw new NotImplementedException();
+            Expression<Func<Blog, bool>> lambda = predicate.ConvertExpression();
+            Blog ormBlog = _context.Set<Blog>().AsExpandable().Where(lambda).FirstOrDefault();
+
+            return ormBlog?.ToDALEntity();
         }
 
-        public Blog Get(Expression<Blog> predicate)
+        public DALBlog Get(int id)
         {
-            throw new NotImplementedException();
+            Blog ormBlog = _context.Set<Blog>().FirstOrDefault(e => e.UserId == id);
+
+            return ormBlog?.ToDALEntity();
         }
 
-        public Blog Get(int id)
+        public IEnumerable<DALBlog> GetAll()
         {
-            throw new NotImplementedException();
+            List<Blog> ormBlogs = _context.Set<Blog>().ToList();
+
+            return RetrieveSet(ormBlogs);
         }
 
-        public IEnumerable<Blog> GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<DALBlog> GetAll(Predicate<DALBlog> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<Blog> GetAll(Predicate<Blog> predicate)
+        public IEnumerable<DALBlog> GetAll(Expression<Func<DALBlog, bool>> predicate)
         {
             throw new NotImplementedException();
         }
 
         public void Update(DALBlog item)
         {
-            throw new NotImplementedException();
+            Blog blog = _context.Set<Blog>().Find(item.Id);
+
+            if (blog != null)
+            {
+                blog.UserId = item.UserID;
+                blog.User = _context.Set<User>().Find(item.UserID);
+            }
         }
 
-        public void Update(Blog item)
+        private HashSet<DALBlog> RetrieveSet(List<Blog> ormBlogs)
         {
-            throw new NotImplementedException();
-        }
+            HashSet<DALBlog> dalBlogs = new HashSet<DALBlog>();
 
-        DALBlog IRepository<DALBlog>.Get(int id)
-        {
-            throw new NotImplementedException();
-        }
+            foreach (Blog ormBlog in ormBlogs)
+                dalBlogs.Add(ormBlog.ToDALEntity());
 
-        IEnumerable<DALBlog> IRepository<DALBlog>.GetAll()
-        {
-            throw new NotImplementedException();
+            return dalBlogs;
         }
     }
 }
