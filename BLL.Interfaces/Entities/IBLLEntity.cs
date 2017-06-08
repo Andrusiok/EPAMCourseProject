@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BLL
+namespace BLL.Interfaces.Entities
 {
-    public class Class1
+    public interface IBLLEntity
     {
+        int Id { get; set; }
     }
 }

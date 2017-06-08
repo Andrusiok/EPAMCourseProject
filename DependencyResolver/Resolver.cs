@@ -1,5 +1,6 @@
 ﻿using System.Data.Entity;
 using BLL.Interfaces.Services;
+using BLL.Interfaces.Entities;
 using BLL;
 using BLL.Services;
 using DAL.Repositories;
@@ -33,9 +34,8 @@ namespace DependencyResolver
                 kernel.Bind<DbContext>().To<BlogContext>().InSingletonScope();
             }
 
-            kernel.Bind<IService>().To<UserService>();
+            kernel.Bind<IService<UserEntity>().To<UserService>();
             kernel.Bind<IRepository<DALUser>>().To<UserRepository>();
-            kernel.Bind<IService>().To<BlogService>();
             kernel.Bind<IRepository<DALBlog>>().To<BlogRepository>();
             kernel.Bind<IRepository<DALLike>>().To<LikeRepository>();
             kernel.Bind<IRepository<DALPost>>().To<PostRepository>();
