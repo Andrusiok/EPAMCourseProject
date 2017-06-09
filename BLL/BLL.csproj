@@ -42,9 +42,22 @@
   <ItemGroup>
     <Compile Include="BLLMappers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\BlogService.cs" />
+    <Compile Include="Services\CommentService.cs" />
+    <Compile Include="Services\ImageService.cs" />
+    <Compile Include="Services\LikeService.cs" />
+    <Compile Include="Services\PostService.cs" />
+    <Compile Include="Services\UserService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Services\" />
+    <ProjectReference Include="..\BLL.Interfaces\BLL.Interfaces.csproj">
+      <Project>{4f74eb37-8dee-4e89-bcbb-73c60801f18f}</Project>
+      <Name>BLL.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DAL.Interfaces\DAL.Interfaces.csproj">
+      <Project>{0c1276b4-072c-4210-ac6b-14502b5cd510}</Project>
+      <Name>DAL.Interfaces</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

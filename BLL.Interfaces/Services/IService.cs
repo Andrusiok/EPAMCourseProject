@@ -10,9 +10,10 @@ namespace BLL.Interfaces.Services
 {
     public interface IService<T> where T:IBLLEntity
     {
-        T Get();
-        T Get(Expression<Func<UserEntity, bool>> predicate);
-        T GetAll(Expression<Func<UserEntity, bool>> predicate);
+        T Get(int id);
+        T Get(Expression<Func<T, bool>> predicate);
+        IEnumerable<T> GetAll();
+        IEnumerable<T> GetAll(Expression<Func<T, bool>> predicate);
         void Update(T item);
         void Delete(int id);
         void Create(T item);

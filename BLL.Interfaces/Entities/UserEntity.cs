@@ -12,7 +12,7 @@ namespace BLL.Interfaces.Entities
         public string Name { get; set; }
         public string Password { get; set; }
         public string Mail { get; set; }
-        public string RoleID { get; set; }
+        public int RoleID { get; set; }
 
         public bool Equals(UserEntity other)
         {
