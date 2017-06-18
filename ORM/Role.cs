@@ -13,6 +13,7 @@ namespace ORM
             Users = new List<User>();
         }
 
+        [Key]
         public int RoleId { get; set; }
 
         public string RoleName { get; set; }

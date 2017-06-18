@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using DAL.Interfaces;
 using DAL.Interfaces.DTO;
 using ORM;
 using System.Data.Entity;
-using System.Data.Entity.Migrations;
 using LinqKit;
 
 namespace DAL.Repositories
@@ -31,7 +28,7 @@ namespace DAL.Repositories
 
             _context.Set<User>().Add(new User()
             {
-                UserName = item.Name,
+                Name = item.Name,
                 RoleId = item.RoleId,
                 Password = item.Password,
                 Email = item.Mail,
@@ -42,8 +39,15 @@ namespace DAL.Repositories
         public void Delete(int id)
         {
             User user = _context.Set<User>().Find(id);
+            IEnumerable<Like> likes = _context.Set<Like>().AsExpandable().Where(x=>x.UserId == id).ToList();
+            IEnumerable<Comment> comments = _context.Set<Comment>().AsExpandable().Where(x => x.UserId == id).ToList();
 
-            if (user != null) _context.Set<User>().Remove(user);
+            if (user != null)
+            {
+                _context.Set<Like>().RemoveRange(likes);
+                _context.Set<Comment>().RemoveRange(comments);
+                _context.Set<User>().Remove(user);
+            }
         }
 
         public DALUser Get(Expression<Func<DALUser, bool>> predicate)
@@ -56,7 +60,7 @@ namespace DAL.Repositories
 
         public DALUser Get(int id)
         {
-            User ormUser = _context.Set<User>().FirstOrDefault(e => e.UserId == id);
+            User ormUser = _context.Set<User>().FirstOrDefault(e => e.Id == id);
 
             return ormUser?.ToDALEntity();
         }
@@ -82,7 +86,7 @@ namespace DAL.Repositories
 
             if (user != null)
             {
-                user.UserName = item.Name;
+                user.Name = item.Name;
                 user.Password = item.Password;
                 user.RoleId = item.RoleId;
                 user.Role = _context.Set<Role>().Find(item.RoleId);

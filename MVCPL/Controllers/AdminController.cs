@@ -41,16 +41,10 @@ namespace MVCPL.Controllers
             {
                 BlogEntity blog = _blogService.Get(x => x.UserId == user.Id);
                 IEnumerable<PostEntity> posts = _postService.GetAll(x => x.BlogId == blog.Id);
-                List<FullPostVM> postList = new List<FullPostVM>();
+                List<PostVM> postList = new List<PostVM>();
 
                 foreach (PostEntity post in posts)
-                    postList.Add(new FullPostVM()
-                    {
-                        Post = post.ToPLEntity(),
-                        Image = _imageService.Get(x => x.PostId == post.Id).ToPLEntity(),
-                        Comments = _commentService.GetAll(x=>x.PostId == post.Id).Select(x=>x.ToPLEntity()),
-                        Likes = new List<LikeVM>()
-                    });
+                    postList.Add(post.ToPLEntity());
 
                 userList.Add(new UserBlogVM()
                 {

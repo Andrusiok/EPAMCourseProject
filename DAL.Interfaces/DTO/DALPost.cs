@@ -12,5 +12,6 @@ namespace DAL.Interfaces.DTO
         public int BlogId { get; set; }
         public string Title { get; set; }
         public string Annotation { get; set; }
+        public string Text { get; set; }
     }
 }

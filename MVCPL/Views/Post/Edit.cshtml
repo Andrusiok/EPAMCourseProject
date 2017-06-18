@@ -1,0 +1,49 @@
+﻿@using MVCPL.Models
+@model PostVM
+@{
+    ViewBag.Title = "Edit";
+}
+<section id="postForm">
+    @{
+        Html.EnableClientValidation(true);
+        Html.EnableUnobtrusiveJavaScript(true);
+    }
+
+    @using (Html.BeginForm( (string)ViewBag.ActionName, "Post", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        <div class="form-group">
+            @Html.HiddenFor(m=>m.Id)
+            @Html.HiddenFor(m => m.BlogId) 
+            <div class="control-label col-sm-2">
+                @Html.LabelFor(m => m.Title)
+            </div>
+            <div class="col-sm-10" style="margin-bottom: 10px">
+                @Html.TextBoxFor(m => m.Title, new {@class = "form-control", @placeholder = "Title", @style = "max-width: none;"})
+                @Html.ValidationMessageFor(m => m.Title)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="control-label col-sm-2">
+                @Html.LabelFor(m => m.Annotation)
+            </div>
+            <div class="col-sm-10" style="margin-bottom: 10px">
+                @Html.TextAreaFor(m => m.Annotation, new { @class = "form-control", @placeholder = "Short Description", @style="max-width: none; height: 100px" })
+                @Html.ValidationMessageFor(m => m.Annotation)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="control-label col-sm-2">
+                @Html.LabelFor(m => m.Text)
+            </div>
+            <div class="col-sm-10">
+                @Html.TextAreaFor(m => m.Text, new { @class = "form-control", @placeholder = "Text", @style = "max-width: none; height: 300px"})
+                @Html.ValidationMessageFor(m => m.Text)
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success" style="margin-left: 15px; margin-top: 10px">@ViewBag.ButtonText</button>
+    }
+</section>
+
+

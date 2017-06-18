@@ -13,10 +13,9 @@ namespace ORM
             Likes = new List<Like>();
             Comments = new List<Comment>();
             Images = new List<Image>();
-            Tags = new List<Tag>();
         }
 
-        public int PostId { get; set; }
+        public int Id { get; set; }
 
         public int BlogId { get; set; }
 
@@ -26,12 +25,15 @@ namespace ORM
 
         public string Annotation { get; set; }
 
+        [MaxLength]
+        public string Text { get; set; }
+
         public virtual ICollection<Like> Likes { get; set; }
 
         public virtual ICollection<Comment> Comments { get; set; }
 
         public virtual ICollection<Image> Images { get; set; }
 
-        public virtual ICollection<Tag> Tags { get; set; }
+        //public virtual ICollection<Tag> Tags { get; set; }
     }
 }

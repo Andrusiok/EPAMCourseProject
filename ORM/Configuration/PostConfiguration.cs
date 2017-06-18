@@ -11,24 +11,16 @@ namespace ORM.Configuration
     {
         public PostConfiguration()
         {
-            HasKey(e => e.PostId);
+            HasKey(e => e.Id);
             HasMany(e => e.Likes)
                 .WithRequired(e => e.Post)
-                .WillCascadeOnDelete(true);
+                .HasForeignKey(e=>e.PostId);
             HasMany(e => e.Comments)
                 .WithRequired(e => e.Post)
-                .WillCascadeOnDelete(true);
+                .HasForeignKey(e => e.PostId);
             HasMany(e => e.Images)
                 .WithRequired(e => e.Post)
-                .WillCascadeOnDelete(true);
-            HasMany(e => e.Tags)
-                .WithMany(e => e.Posts)
-                .Map(e =>
-                {
-                    e.MapLeftKey("PostRefId");
-                    e.MapRightKey("TagRefId");
-                    e.ToTable("PostTag");
-                });
+                .HasForeignKey(e => e.PostId);
         }
     }
 }

@@ -1,0 +1,64 @@
+﻿@using MVCPL.Models
+@model UserVM
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (Request.IsAuthenticated)
+{
+    <h2>Welcome, @HttpContext.Current.User.Identity.Name</h2>
+    using (Html.BeginForm("FindBlogs", "Blog", FormMethod.Get, new { @class = "form-group" }))
+    {
+        <input type="text" name="searchPattern" class="form-control input-sm icon-bar" placeholder="search" style="max-width: calc(100% - 62px); display: inline-block;" />
+        <button class="btn btn-primary btn-sm pull-right" type="submit">Search</button>
+    }
+    <h2>List of available blogs</h2>
+
+    foreach (var user in ViewBag.Users)
+    {
+        <hr />
+        <tr>
+            <td>
+                <p class="col">
+                    @user.Name
+                <div class="btn-group blocks btn-group-xs">
+                    <a href="@Url.Action("Index", "Blog", new { userId = user.Id })" class="btn btn-info">Explore</a>
+                    <style type="text/css">
+                        form, table {
+                            display: inline;
+                            margin: 0px;
+                            padding: 0px;
+                        }
+                    </style>
+                    @if (Model.Role == Role.Administrator)
+                    {
+                        if (user.Role == Role.User)
+                        {
+                            using (Html.BeginForm("ChangeRole", "User", new { id = user.Id, roleId = (int)Role.Administrator }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+                            {
+                                <input type="submit" class="btn btn-success btn-xs" value="Upgrade Role" style="border-radius: 0; margin-right: -5px;" />
+                            }
+                        }
+                        else
+                        {
+                            using (Html.BeginForm("ChangeRole", "User", new { id = user.Id, roleId = (int)Role.User }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+                            {
+                                <input type="submit" class="btn btn-warning btn-xs" value="Downgrade Role" style="border-radius: 0; margin-right: -5px;" />
+                            }
+                        }
+                        using (Html.BeginForm("Delete", "User", new { id = user.Id }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            <input type="submit" class="btn btn-danger btn-xs" value="Delete" style="border-top-left-radius: 0; border-bottom-left-radius: 0;"/>
+                        }
+                    }
+                </div>
+            </p>
+        </td>
+        </tr>
+    }
+}
+else
+{
+    <h2> Welcome, Guest </h2>
+}
+

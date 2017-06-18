@@ -11,7 +11,7 @@ namespace ORM.Configuration
     {
         public LikeConfiguration()
         {
-            HasKey(e => e.LikeId);
+            HasKey(e => e.Id);
         }
     }
 }

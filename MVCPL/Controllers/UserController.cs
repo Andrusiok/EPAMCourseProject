@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Web;
 using System.Web.Mvc;
 
 namespace MVCPL.Controllers
@@ -29,25 +28,39 @@ namespace MVCPL.Controllers
                 string userName = ((UserVM)Session["UserInfo"]).Name;
                 Expression<Func<UserEntity, bool>> expression = x => x.Name == userName;
                 UserVM userEntity = _userService.Get(expression).ToPLEntity();
+                ViewBag.Users = _userService.GetAll().Select(x => x.ToPLEntity());
+                return View(userEntity);
             }
 
             return View();
         }
 
+        [HttpPost]
         [Authorize]
         public ActionResult Delete(int id)
         {
-            _userService.Delete(id);
+            UserVM item = _userService.Get(id).ToPLEntity();
+            int adminCount = _userService.GetAll(x => x.RoleID == (int)Role.Administrator).Count();
+            bool isDeleted = false;
+
             if (((UserVM)Session["UserInfo"]).Role == Role.Administrator)
             {
-                return RedirectToAction("Index", "Admin");
+                if ((item.Role == Role.Administrator && adminCount > 1) || item.Role == Role.User)
+                {
+                    _userService.Delete(id);
+                    isDeleted = true;
+                }
+
+                if (((UserVM)Session["UserInfo"]).Id == item.Id && isDeleted) return RedirectToAction("LogOut", "Login");
+
+                return RedirectToAction("Index", "User");
             }
 
             return RedirectToAction("LogOut", "Login");
         }
 
         [Authorize]
-        public ActionResult Edit(int id)
+        public ActionResult Get(int id)
         {
             var user = _userService.Get(id);
             return View(user.ToPLEntity());
@@ -55,14 +68,22 @@ namespace MVCPL.Controllers
 
         [HttpPost]
         [Authorize]
+        public ActionResult ChangeRole(int id, int roleId)
+        {
+            UserEntity item = _userService.Get(id);
+            item.RoleID = roleId;
+
+            if (((UserVM)Session["UserInfo"]).Id != id)_userService.Update(item);
+
+            return RedirectToAction("Index", "User");
+        }
+
+        [HttpPost]
+        [Authorize]
         public ActionResult Edit(UserVM user)
         {
             _userService.Update(user.ToBLLEntity());
-            if (((UserVM)Session["UserInfo"]).Role == Role.Administrator)
-            {
-                return RedirectToAction("Index", "Admin");
-            }
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "User");
         }
 
         [NonAction]

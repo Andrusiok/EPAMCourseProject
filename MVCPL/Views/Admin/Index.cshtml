@@ -4,33 +4,28 @@
     ViewBag.Title = "Index";
 }
 <h2>User Search:</h2>
-@using (Ajax.BeginForm("FindFiles", "File", null,
+<!--@using (Ajax.BeginForm("FindPosts", "Post", null,
                 new AjaxOptions() { UpdateTargetId = "searchResult" },
                 new { id = "ajaxForm" }))
 {
     <input type="text" name="searchPattern" onchange="$('#ajaxForm').trigger('submit');" />
     <select id="searchResult"></select>
-}
+}-->
 
 <h2>Users:</h2>
 @foreach (var user in Model)
 {
-    <h3>@user.User.UserName</h3>
+    <h3>@user.User.Name</h3>
     @Html.ActionLink("Edit", "Edit", "User", new { user.User.Id }, new { @class = "btn btn-info glyphicon glyphicon-edit" })
     @Html.ActionLink("Delete", "Delete", "User", new { user.User.Id }, new { @class = "btn btn-danger glyphicon glyphicon-trash" })
-    if (user.Files.Count() != 0)
+    if (user.Blog.Posts.Count() != 0)
     {
-        <h3>@user.User.UserName's Files:</h3>
-        foreach (var file in user.Files)
+        <h3>@user.User.Name's Posts:</h3>
+        foreach (var post in user.Blog.Posts)
         {
-            <div>@file.FileName</div>
-            @Html.ActionLink("Download", "Download", "File", new { file.Id }, new { @class = "btn btn-info glyphicon glyphicon-save" })
-            @Html.ActionLink("Edit", "Edit", "File", new { file.Id }, new { @class = "btn btn-info glyphicon glyphicon-edit" })
-            @Html.ActionLink("Delete", "Delete", "File", new { file.Id }, new { @class = "btn btn-danger glyphicon glyphicon-trash" })
-            using (Ajax.BeginForm("ShortLinkGenerator", "File", new { file.Id }, new AjaxOptions { UpdateTargetId = "shortLink" }))
-            {
-                <input type="submit" class="btn btn-info" value="Get ShortLink" />
-            }
+            <div>@post.Post.Title</div>
+            <div>@post.Post.Annotation</div>
+            @Html.ActionLink("Delete", "Delete", "Post", new { post.Post.Id }, new { @class = "btn btn-danger glyphicon glyphicon-trash" })
             <div id="shortLink"></div>
         }
     }

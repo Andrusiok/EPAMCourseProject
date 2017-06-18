@@ -28,6 +28,7 @@ namespace DAL.Repositories
             {
                 Title = item.Title,
                 Annotation = item.Annotation,
+                Text = item.Text,
                 BlogId = item.BlogId,
                 Blog = _context.Set<Blog>().Find(item.BlogId),
             });
@@ -50,7 +51,7 @@ namespace DAL.Repositories
 
         public DALPost Get(int id)
         {
-            Post ormPost = _context.Set<Post>().FirstOrDefault(e => e.PostId == id);
+            Post ormPost = _context.Set<Post>().FirstOrDefault(e => e.Id == id);
 
             return ormPost?.ToDALEntity();
         }
@@ -79,6 +80,7 @@ namespace DAL.Repositories
                 post.Title = item.Title;
                 post.Annotation = item.Annotation;
                 post.BlogId = item.BlogId;
+                post.Text = item.Text;
                 post.Blog = _context.Set<Blog>().Find(item.BlogId);
             }
         }

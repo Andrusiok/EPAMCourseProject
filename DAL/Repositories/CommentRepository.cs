@@ -26,7 +26,7 @@ namespace DAL.Repositories
         {
             _context.Set<Comment>().Add(new Comment()
             {
-                Date = new DateTime(),
+                Date = DateTime.Now,
                 Entity = item.Entity,
                 PostId = item.PostId,
                 Post = _context.Set<Post>().Find(item.PostId),
@@ -52,7 +52,7 @@ namespace DAL.Repositories
 
         public DALComment Get(int id)
         {
-            Comment ormUser = _context.Set<Comment>().FirstOrDefault(e => e.CommentId == id);
+            Comment ormUser = _context.Set<Comment>().FirstOrDefault(e => e.Id == id);
 
             return ormUser?.ToDALEntity();
         }

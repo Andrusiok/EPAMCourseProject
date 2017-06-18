@@ -11,13 +11,14 @@ namespace ORM.Configuration
     {
         public BlogConfiguration()
         {
-            HasKey(c => c.BlogId);
-            HasOptional(e => e.User)
-                .WithRequired(e=>e.Blog)
+            HasKey(c => c.Id);
+            HasRequired(c => c.User)
+                .WithRequiredDependent(c => c.Blog)
                 .WillCascadeOnDelete(true);
+            
             HasMany(e => e.Posts)
                 .WithRequired(e => e.Blog)
-                .WillCascadeOnDelete(false);
+                .WillCascadeOnDelete(true);
         }
     }
 }

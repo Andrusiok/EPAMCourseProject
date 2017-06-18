@@ -49,7 +49,7 @@ namespace DAL.Repositories
 
         public DALImage Get(int id)
         {
-            Image ormImages = _context.Set<Image>().FirstOrDefault(e => e.ImageId == id);
+            Image ormImages = _context.Set<Image>().FirstOrDefault(e => e.Id == id);
 
             return ormImages?.ToDALEntity();
         }

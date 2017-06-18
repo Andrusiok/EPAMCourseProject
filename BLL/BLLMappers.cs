@@ -15,6 +15,8 @@ namespace BLL
 
         public static UserEntity ToBLLEntity(this DALUser item)
         {
+            if (ReferenceEquals(item, null)) return null;
+
             return new UserEntity
             {
                 Id = item.Id,
@@ -27,6 +29,8 @@ namespace BLL
 
         public static BlogEntity ToBLLEntity(this DALBlog item)
         {
+            if (ReferenceEquals(item, null)) return null;
+
             return new BlogEntity()
             {
                 Id = item.Id,
@@ -48,17 +52,22 @@ namespace BLL
 
         public static PostEntity ToBLLEntity(this DALPost item)
         {
+            if (ReferenceEquals(item, null)) return null;
+
             return new PostEntity()
             {
                 Id = item.Id,
                 Annotation = item.Annotation,
                 BlogId = item.BlogId,
-                Title = item.Title
+                Title = item.Title,
+                Text = item.Text
             };
         }
 
         public static LikeEntity ToBLLEntity(this DALLike item)
         {
+            if (ReferenceEquals(item, null)) return null;
+
             return new LikeEntity()
             {
                 Id = item.Id,
@@ -69,6 +78,8 @@ namespace BLL
 
         public static ImageEntity ToBLLEntity(this DALImage item)
         {
+            if (ReferenceEquals(item, null)) return null;
+
             return new ImageEntity()
             {
                 Id = item.Id,
@@ -82,6 +93,8 @@ namespace BLL
 
         public static DALUser ToDALEntity(this UserEntity item)
         {
+            if (ReferenceEquals(item, null)) return null;
+
             return new DALUser
             {
                 Id = item.Id,
@@ -94,6 +107,8 @@ namespace BLL
 
         public static DALBlog ToDALEntity(this BlogEntity item)
         {
+            if (ReferenceEquals(item, null)) return null;
+
             return new DALBlog()
             {
                 Id = item.Id,
@@ -103,6 +118,8 @@ namespace BLL
 
         public static DALComment ToDALEntity(this CommentEntity item)
         {
+            if (ReferenceEquals(item, null)) return null;
+
             return new DALComment()
             {
                 Id = item.Id,
@@ -115,17 +132,22 @@ namespace BLL
 
         public static DALPost ToDALEntity(this PostEntity item)
         {
+            if (ReferenceEquals(item, null)) return null;
+
             return new DALPost()
             {
                 Id = item.Id,
                 Annotation = item.Annotation,
                 BlogId = item.BlogId,
-                Title = item.Title
+                Title = item.Title,
+                Text = item.Text
             };
         }
 
         public static DALLike ToDALEntity(this LikeEntity item)
         {
+            if (ReferenceEquals(item, null)) return null;
+
             return new DALLike()
             {
                 Id = item.Id,
@@ -136,6 +158,8 @@ namespace BLL
 
         public static DALImage ToDALEntity(this ImageEntity item)
         {
+            if (ReferenceEquals(item, null)) return null;
+
             return new DALImage()
             {
                 Id = item.Id,
@@ -151,7 +175,14 @@ namespace BLL
         public static Expression<Func<DALUser, bool>> ConvertExpression(this Expression<Func<UserEntity, bool>> f)
         {
             Expression<Func<DALUser, UserEntity>> convert =
-                bar => bar.ToBLLEntity();
+                bar => new UserEntity
+                {
+                    Id = bar.Id,
+                    Name = bar.Name,
+                    Password = bar.Password,
+                    RoleID = bar.RoleId,
+                    Mail = bar.Mail
+                };
 
             var param = Expression.Parameter(typeof(DALUser), "bar");
             var body = Expression.Invoke(f, Expression.Invoke(convert, param));
@@ -162,7 +193,11 @@ namespace BLL
         public static Expression<Func<DALBlog, bool>> ConvertExpression(this Expression<Func<BlogEntity, bool>> f)
         {
             Expression<Func<DALBlog, BlogEntity>> convert =
-                bar => bar.ToBLLEntity();
+                bar => new BlogEntity()
+                {
+                    Id = bar.Id,
+                    UserId = bar.UserID
+                };
 
             var param = Expression.Parameter(typeof(DALBlog), "bar");
             var body = Expression.Invoke(f, Expression.Invoke(convert, param));
@@ -173,7 +208,14 @@ namespace BLL
         public static Expression<Func<DALPost, bool>> ConvertExpression(this Expression<Func<PostEntity, bool>> f)
         {
             Expression<Func<DALPost, PostEntity>> convert =
-                bar => bar.ToBLLEntity();
+                bar => new PostEntity()
+                {
+                    Id = bar.Id,
+                    Annotation = bar.Annotation,
+                    BlogId = bar.BlogId,
+                    Title = bar.Title,
+                    Text = bar.Text
+                };
 
             var param = Expression.Parameter(typeof(DALPost), "bar");
             var body = Expression.Invoke(f, Expression.Invoke(convert, param));
@@ -184,7 +226,12 @@ namespace BLL
         public static Expression<Func<DALLike, bool>> ConvertExpression(this Expression<Func<LikeEntity, bool>> f)
         {
             Expression<Func<DALLike, LikeEntity>> convert =
-                bar => bar.ToBLLEntity();
+                bar => new LikeEntity()
+                {
+                    Id = bar.Id,
+                    PostId = bar.PostId,
+                    UserId = bar.UserId
+                };
 
             var param = Expression.Parameter(typeof(DALLike), "bar");
             var body = Expression.Invoke(f, Expression.Invoke(convert, param));
@@ -195,7 +242,14 @@ namespace BLL
         public static Expression<Func<DALComment, bool>> ConvertExpression(this Expression<Func<CommentEntity, bool>> f)
         {
             Expression<Func<DALComment, CommentEntity>> convert =
-                bar => bar.ToBLLEntity();
+                bar => new CommentEntity()
+                {
+                    Id = bar.Id,
+                    Date = bar.Date,
+                    Entity = bar.Entity,
+                    PostId = bar.PostId,
+                    UserId = bar.UserId
+                };
 
             var param = Expression.Parameter(typeof(DALComment), "bar");
             var body = Expression.Invoke(f, Expression.Invoke(convert, param));
@@ -206,7 +260,12 @@ namespace BLL
         public static Expression<Func<DALImage, bool>> ConvertExpression(this Expression<Func<ImageEntity, bool>> f)
         {
             Expression<Func<DALImage, ImageEntity>> convert =
-                bar => bar.ToBLLEntity();
+                bar => new ImageEntity()
+                {
+                    Id = bar.Id,
+                    PostId = bar.PostId,
+                    Path = bar.Path
+                };
 
             var param = Expression.Parameter(typeof(DALImage), "bar");
             var body = Expression.Invoke(f, Expression.Invoke(convert, param));

@@ -50,7 +50,8 @@ namespace MVCPL.Infrastracture
                 Id = item.Id,
                 Annotation = item.Annotation,
                 BlogId = item.BlogId,
-                Title = item.Title
+                Title = item.Title,
+                Text = item.Text
             };
         }
 
@@ -117,7 +118,8 @@ namespace MVCPL.Infrastracture
                 Id = item.Id,
                 Annotation = item.Annotation,
                 BlogId = item.BlogId,
-                Title = item.Title
+                Title = item.Title,
+                Text = item.Text
             };
         }
 

@@ -14,7 +14,7 @@ namespace ORM
             Database.SetInitializer(new DbInitializer());
         }
 
-        public BlogContext(): base("name=BlogDb") { }
+        public BlogContext(): base("name=CloudInfoDb") { }
 
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<User> Users { get; set; }

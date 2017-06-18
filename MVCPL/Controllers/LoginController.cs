@@ -10,6 +10,8 @@ using BLL.Interfaces.Entities;
 using BLL.Interfaces.Services;
 using MVCPL.Infrastracture;
 using MVCPL.Models;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace MVCPL.Controllers
 {
@@ -18,9 +20,10 @@ namespace MVCPL.Controllers
         private IService<UserEntity> _userService;
         private IService<BlogEntity> _blogService;
 
-        public LoginController(IService<UserEntity> service)
+        public LoginController(IService<UserEntity> service, IService<BlogEntity> blogService)
         {
             _userService = service;
+            _blogService = blogService;
         }
         //
         // GET: /Login/
@@ -36,8 +39,19 @@ namespace MVCPL.Controllers
         {
             if (ModelState.IsValid)
             {
+                l.Password = sha256_hash(l.Password);
+
                 Expression<Func<UserEntity, bool>> expression = x => x.Name == l.Name && x.Password == l.Password;
-                var user = _userService.Get(expression);
+                UserEntity user;
+
+                try
+                {
+                    user = _userService.Get(expression);
+                }
+                catch (Exception e)
+                {
+                    return View("Error");
+                }
                 if (user != null)
                 {
                     FormsAuthentication.SetAuthCookie(user.Name, false);
@@ -49,6 +63,7 @@ namespace MVCPL.Controllers
                     else
                     {
                         return RedirectToAction("Index", "User");
+
                     }
                 }
             }
@@ -61,7 +76,7 @@ namespace MVCPL.Controllers
         {
             FormsAuthentication.SignOut();
             Session.Abandon();
-            return RedirectToAction("Index", "User");
+            return RedirectToAction("Index", "Home");
         }
 
         public ActionResult Register()
@@ -72,21 +87,41 @@ namespace MVCPL.Controllers
         [ActionName("NewUser")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Register(RegisterViewModel l)
+        public ActionResult Register(RegisterVM l)
         {
+            ModelState.Remove("Password");
+
             if (ModelState.IsValid && l != null)
             {
                 l.Role = Role.User;
-                l.Password = l.RegisterPassword;
-                _userService.Create(l.ToBLLEntity());
-                int id = _userService.Get(x => x.Name == l.Name).Id;
-                _blogService.Create(new BlogEntity()
+                l.Password = sha256_hash(l.RegisterPassword);
+                try
                 {
-                    UserId = id
-                });
+                    _userService.Create(l.ToBLLEntity());
+                    _blogService.Create(new BlogEntity
+                    {
+                        UserId = _userService.Get(x => x.Name == l.Name).Id
+                    });
+                }
+                catch (Exception e)
+                {
+                    return View("Error");
+                }
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Login");
+        }
+
+        [NonAction]
+        public static String sha256_hash(String value)
+        {
+            using (SHA256 hash = SHA256.Create())
+            {
+                return string.Concat(hash
+                  .ComputeHash(Encoding.UTF8.GetBytes(value))
+                  .Select(item => item.ToString("x2")));
+            }
+
         }
     }
 }

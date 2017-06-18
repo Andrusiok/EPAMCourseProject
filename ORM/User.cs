@@ -14,9 +14,10 @@ namespace ORM
             Comments = new List<Comment>();
         }
 
-        public int UserId { get; set; }
+        [Key]
+        public int Id { get; set; }
 
-        public string UserName { get; set; }
+        public string Name { get; set; }
 
         [Required]
         public string Password { get; set; }
@@ -26,8 +27,6 @@ namespace ORM
         public int RoleId { get; set; }
 
         public virtual Role Role { get; set; }
-
-        public int BlogId { get; set; }
 
         public virtual Blog Blog { get; set; }
 

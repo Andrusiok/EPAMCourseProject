@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using DAL.Interfaces;
 using DAL.Interfaces.DTO;
 using ORM;
 using System.Data.Entity;
-using System.Data.Entity.Migrations;
 using LinqKit;
 
 namespace DAL.Repositories
@@ -37,7 +34,8 @@ namespace DAL.Repositories
         {
             Like like = _context.Set<Like>().Find(id);
 
-            if (like != null) _context.Set<Like>().Remove(like);
+            if (!ReferenceEquals(like, null))
+                _context.Set<Like>().Remove(like);
         }
 
         public DALLike Get(Expression<Func<DALLike, bool>> predicate)
@@ -50,7 +48,7 @@ namespace DAL.Repositories
 
         public DALLike Get(int id)
         {
-            Like ormLikes = _context.Set<Like>().FirstOrDefault(e => e.LikeId == id);
+            Like ormLikes = _context.Set<Like>().FirstOrDefault(e => e.Id == id);
 
             return ormLikes?.ToDALEntity();
         }
@@ -74,7 +72,7 @@ namespace DAL.Repositories
         {
             Like like = _context.Set<Like>().Find(item.Id);
 
-            if (like != null)
+            if (!ReferenceEquals(like, null))
             {
                 like.UserId = item.UserId;
                 like.User = _context.Set<User>().Find(item.PostId);

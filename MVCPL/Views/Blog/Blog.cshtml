@@ -1,0 +1,34 @@
+﻿@using MVCPL.Models
+@model BlogPostVM
+@{
+    ViewBag.Title = "Blog";
+}
+@if (Request.IsAuthenticated)
+{
+    <h2>Welcome, @HttpContext.Current.User.Identity.Name</h2>
+    using (Html.BeginForm("FindPosts", "Blog", new { userId = Model.Blog.Id }))
+    {
+        <input type="text" name="searchPattern" class="form-control input-sm icon-bar" placeholder="search" style="max-width: calc(100% - 62px); display: inline-block;" />
+        <button class="btn btn-primary btn-sm pull-right" type="submit">Search</button>
+    }
+
+    <h2>List of available posts</h2>
+    if (ViewBag.User.Id == Model.Blog.Id)
+    {
+        <a href=@Url.Action("CreatePost", "Post") class="btn-success btn-xs">New Post</a>;
+    }
+    foreach (var post in Model.Posts)
+    {
+        <hr />
+        <tr>
+            <td><h3>@post.Title</h3></td>
+            <td><p>@post.Annotation</p></td>
+            <td><p><a href="@Url.Action("Index", "Post", new { postId = post.Id})" class="btn-info btn-xs">Explore</a></p></td>
+        </tr>
+    }
+}
+else
+{
+    <h2>Welcome, Guest </h2>
+}
+

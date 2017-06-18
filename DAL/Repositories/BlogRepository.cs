@@ -27,7 +27,7 @@ namespace DAL.Repositories
         {
             _context.Set<Blog>().Add(new Blog()
             {
-                UserId = item.UserID,
+                Id = item.UserID,
                 User = _context.Set<User>().Find(item.UserID)
             });
         }
@@ -49,7 +49,7 @@ namespace DAL.Repositories
 
         public DALBlog Get(int id)
         {
-            Blog ormBlog = _context.Set<Blog>().FirstOrDefault(e => e.BlogId == id);
+            Blog ormBlog = _context.Set<Blog>().FirstOrDefault(e => e.Id == id);
 
             return ormBlog?.ToDALEntity();
         }
@@ -72,7 +72,7 @@ namespace DAL.Repositories
 
             if (blog != null)
             {
-                blog.UserId = item.UserID;
+                blog.Id = item.UserID;
                 blog.User = _context.Set<User>().Find(item.UserID);
             }
         }

@@ -14,6 +14,5 @@ namespace DAL.Interfaces.DTO
         public string Password { get; set; }
         public string Mail { get; set; }
         public int RoleId { get; set; }
-        public int BlogId { get; set; }
     }
 }

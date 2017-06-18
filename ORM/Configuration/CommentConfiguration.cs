@@ -11,7 +11,7 @@ namespace ORM.Configuration
     {
         public CommentConfiguration()
         {
-            HasKey(e => e.CommentId);
+            HasKey(e => e.Id);
         }
     }
 }

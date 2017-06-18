@@ -8,7 +8,8 @@ namespace ORM
 {
     public class Like
     {
-        public int LikeId { get; set; }
+        [Key]
+        public int Id { get; set; }
 
         public int UserId { get; set; }
 

@@ -11,7 +11,7 @@ namespace ORM.Configuration
     {
         public UserConfiguration()
         {
-            HasKey(e => e.UserId);
+            HasKey(e => e.Id);
             HasMany(e => e.Likes)
                 .WithRequired(e => e.User)
                 .WillCascadeOnDelete(false);

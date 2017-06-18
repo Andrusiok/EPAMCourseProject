@@ -8,7 +8,7 @@ namespace ORM
 {
     public class Image
     {
-        public int ImageId { get; set; }
+        public int Id { get; set; }
 
         public int PostId { get; set; }
 

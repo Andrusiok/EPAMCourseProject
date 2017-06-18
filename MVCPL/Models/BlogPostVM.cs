@@ -8,6 +8,6 @@ namespace MVCPL.Models
     public class BlogPostVM
     {
         public BlogVM Blog { get; set; }
-        public IEnumerable<FullPostVM> Posts { get; set; }
+        public IEnumerable<PostVM> Posts { get; set; }
     }
 }

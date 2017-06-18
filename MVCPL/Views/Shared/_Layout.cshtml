@@ -1,5 +1,6 @@
-﻿<!DOCTYPE html>
-<html>
+﻿@using MVCPL.Models
+<!DOCTYPE html>
+<html style="min-height: 100%; position: relative">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta charset="utf-8" />
@@ -21,18 +22,36 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home Page", "Index", "Home")</li>
+                    @if (Request.IsAuthenticated)
+                    {
+                        <li>@Html.ActionLink("Browse", "Index", "User")</li>
+                        <li>@Html.ActionLink("My Blog", "Index", "Blog", new { userId = ((UserVM)Session["UserInfo"]).Id}, new { })</li>
+                    }
+                    else
+                    {
+                        <li>@Html.ActionLink("Home Page", "Index", "Home")</li>
+                    }                    
                     <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    @if (Request.IsAuthenticated)
+                    {
+                        <li><a href="@Url.Action("LogOut", "Login")">Log Out</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="@Url.Action("Index", "Login")">Log In</a></li>
+                        <li><a href="@Url.Action("Register", "Login")">Register</a></li>
+                    }
                 </ul>
             </div>
         </div>
     </div>
     <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year – ASP.NET application</p>
+        <div style="padding-bottom: 90px">
+            @RenderBody()
+        </div>       
+        <footer class="container body-content" style="position: absolute; bottom: 0; width: 100%">
+            <hr />
+            <p style="text-align: center">&copy; @DateTime.Now.Year – ASP.NET application</p>
         </footer>
     </div>
 

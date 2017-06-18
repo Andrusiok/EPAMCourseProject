@@ -1,0 +1,54 @@
+﻿@using MVCPL.Models
+@model CommentVM
+@{
+    ViewBag.Title = "Post";
+}
+@if (Request.IsAuthenticated)
+{
+    <h1 class="text-center" style="font-weight: bold">@ViewBag.FullPost.Post.Title</h1>
+    <hr />
+    <h3 style="text-align: justify; text-justify: inter-word">@ViewBag.FullPost.Post.Text</h3>
+    <hr />
+    <div style="margin-top: 15px">
+        <div class="btn-group btn-group-xs pull-right" style="margin-top: 2px">
+            @if (ViewBag.User.Id == ViewBag.FullPost.Post.BlogId)
+            {
+                <a href="@Url.Action("EditPost", "Post", new { postId = (int)ViewBag.FullPost.Post.Id })" class="btn btn-warning btn-xs">Edit</a>
+            }
+            <a href="@Url.Action("Index", "Blog", new { userId = (int)ViewBag.FullPost.Post.BlogId })" class="btn btn-primary btn-xs">Back</a>
+            <a href="@Url.Action("CreateLike", "Post", new { postId = (int)ViewBag.FullPost.Post.Id })" class="btn btn-info btn-xs">Like</a>
+            @if (ViewBag.User.Role == Role.Administrator || ViewBag.User.Id == ViewBag.FullPost.Post.BlogId)
+            {
+                <a href="@Url.Action("DeletePost", "Post", new { id = (int)ViewBag.FullPost.Post.Id, blogId = (int)ViewBag.FullPost.Post.BlogId })" class="btn btn-danger btn-xs">Delete</a>
+            }
+        </div>
+        <h3>Likes: <span class="badge text-center" style="vertical-align: middle">@(Enumerable.Count(ViewBag.FullPost.Likes))</span>  Comments: <span class="badge text-center" style="vertical-align: middle">@(Enumerable.Count(ViewBag.FullPost.Comments))</span> </h3>
+    </div>
+    <div class="panel-group">
+        @foreach (CommentVM comment in ViewBag.FullPost.Comments)
+        {
+            <div class="panel-default">
+                <div class="panel panel-heading">
+                    <a href="@Url.Action("Index", "Blog", new { userId = comment.UserId})" class="text-info">@comment.UserName</a> at @comment.Date
+                    @if (ViewBag.User.Role == Role.Administrator || ViewBag.User.Id == ViewBag.FullPost.Post.BlogId || ViewBag.User.Id == comment.UserId)
+                    {
+                        <a href="@Url.Action("DeleteComment", "Post", new { id = comment.Id, postId = comment.PostId })" class="btn btn-danger btn-xs pull-right">Delete</a>
+                    }
+                </div>
+                <div class="panel panel-body">@comment.Entity</div>
+            </div>
+        }
+    </div>
+
+        <h2>Add Comment</h2>
+        <hr />
+    using (Html.BeginForm("CreateComment", "Post", new { postId = ViewBag.Post }, FormMethod.Post, new { enctype = "multipart/form-data", @width="100%", @class="form-horizontal" }))
+    {
+        @Html.TextAreaFor(o => o.Entity, new { @style = "max-width: 100%; height: 120px;", @class = "form-control"})
+        <button type="submit" class="btn btn-success right" style="margin-top: 10px">Submit</button>
+    }
+}
+else
+{
+    <h2>Welcome, Guest</h2>
+}

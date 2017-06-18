@@ -15,12 +15,14 @@ namespace ORM
             base.Seed(context);
             context.Roles.Add(new Role { RoleId = 1, RoleName = "Admin" });
             context.Roles.Add(new Role { RoleId = 2, RoleName = "User" });
-
-            context.Users.Add(new User { UserName = "Andrew", RoleId = 1, Password = "qwerty" });
-            context.Users.Add(new User { UserName = "Mathew", RoleId = 2, Password = "qwerty" });
-            context.Blogs.Add(new Blog { UserId = 2 });
             context.SaveChanges();
 
+            context.Users.Add(new User { Id = 1, Name = "Andrew", RoleId = 1, Password = "65e84be33532fb784c48129675f9eff3a682b27168c0ea744b2cf58ee02337c5" });
+            context.Users.Add(new User { Id = 2, Name = "Mathew", RoleId = 2, Password = "65e84be33532fb784c48129675f9eff3a682b27168c0ea744b2cf58ee02337c5" });
+            context.SaveChanges();
+            context.Blogs.Add(new Blog { Id = 1 });
+            context.Blogs.Add(new Blog { Id = 2 });
+            context.SaveChanges();
         }
     }
 }

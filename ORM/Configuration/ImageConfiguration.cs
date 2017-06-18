@@ -11,7 +11,7 @@ namespace ORM.Configuration
     {
         public ImageConfiguration()
         {
-            HasKey(e => e.ImageId);
+            HasKey(e => e.Id);
         }
     }
 }
