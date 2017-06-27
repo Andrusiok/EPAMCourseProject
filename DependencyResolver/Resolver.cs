@@ -36,16 +36,13 @@ namespace DependencyResolver
             kernel.Bind<IService<BlogEntity>>().To<BlogService>();
             kernel.Bind<IService<PostEntity>>().To<PostService>();
             kernel.Bind<IService<LikeEntity>>().To<LikeService>();
-            kernel.Bind<IService<CommentEntity>>().To<CommentService>();
-            kernel.Bind<IService<ImageEntity>>().To<ImageService>();
+            kernel.Bind<ICommentService>().To<CommentService>();
 
             kernel.Bind<IRepository<DALUser>>().To<UserRepository>();
             kernel.Bind<IRepository<DALBlog>>().To<BlogRepository>();
             kernel.Bind<IRepository<DALLike>>().To<LikeRepository>();
             kernel.Bind<IRepository<DALPost>>().To<PostRepository>();
-            kernel.Bind<IRepository<DALImage>>().To<ImageRepository>();
-            kernel.Bind<IRepository<DALComment>>().To<CommentRepository>();
-            kernel.Bind<IRepository<DALTag>>().To<TagRepository>();
+            kernel.Bind<ICommentRepository>().To<CommentRepository>();
         }
 
     }

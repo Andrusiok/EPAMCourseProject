@@ -2,7 +2,9 @@
 using BLL.Interfaces.Services;
 using MVCPL.Infrastracture;
 using MVCPL.Models;
+using MVCPL.Models.PaginationVM;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -10,17 +12,17 @@ namespace MVCPL.Controllers
 {
     public class PostController : Controller
     {
+        private const int PageSize = 4;
+
         private IService<PostEntity> _postService;
-        private IService<ImageEntity> _imageService;
-        private IService<CommentEntity> _commentService;
+        private ICommentService _commentService;
         private IService<LikeEntity> _likeService;
         private IService<UserEntity> _userService;
 
-        public PostController(IService<UserEntity> userService, IService<LikeEntity> likeService, IService<ImageEntity> imageService, IService<CommentEntity> commentService, IService<PostEntity> postService)
+        public PostController(IService<UserEntity> userService, IService<LikeEntity> likeService, ICommentService commentService, IService<PostEntity> postService)
         {
             _likeService = likeService;
             _postService = postService;
-            _imageService = imageService;
             _commentService = commentService;
             _userService = userService;
         }
@@ -29,14 +31,19 @@ namespace MVCPL.Controllers
         public ActionResult Index(int postId)
         {
             RestoreUser();
+            IEnumerable<CommentVM> comments = _commentService.GetByPage(PageSize, 1, postId).Select(x => x.ToPLEntity());
+            int count = _commentService.GetCount(postId);
+            PageVM page = new PageVM { Number = 1, Size = PageSize, TotalItems = count };
+            CommentPageVM paging = new CommentPageVM { Page = page, Comments = comments };
+
             FullPostVM post = new FullPostVM()
                 {
                     Post = _postService.Get(x => x.Id == postId).ToPLEntity(),
-                    Comments = _commentService.GetAll(x => x.PostId == postId).Select(x => x.ToPLEntity()),
+                    Comments = count,
                     Likes = _likeService.GetAll(x => x.PostId == postId).Select(x => x.ToPLEntity())
             };
 
-            post.Comments = post.Comments.Select(x => 
+            comments = comments.Select(x => 
             {
                 x.UserName = _userService.Get(x.UserId).Name;
                 return x;
@@ -46,6 +53,8 @@ namespace MVCPL.Controllers
             ViewBag.Post = post.Post.Id;
             ViewBag.User = (UserVM)Session["UserInfo"];
             ViewBag.FullPost = post;
+            ViewBag.Paging = paging;
+
             return View("Post");
         }
 
@@ -87,7 +96,8 @@ namespace MVCPL.Controllers
                     PostId = postId
                 });
 
-            return RedirectToAction("Index", "Post", new { postId = postId });
+            ViewBag.LikesCount = _likeService.GetAll(x => x.PostId == postId).Count();
+            return PartialView("LikePartial");
         }
 
         [Authorize]
@@ -98,7 +108,36 @@ namespace MVCPL.Controllers
             LikeEntity item = _likeService.Get(x => x.PostId == postId && x.UserId == userId);
             _likeService.Delete(item.Id);
 
-            return RedirectToAction("Index", "Post", new { postId = postId });
+            ViewBag.LikesCount = _likeService.GetAll(x => x.PostId == postId).Count();
+            return PartialView("LikePartial");
+        }
+
+        [Authorize]
+        public ActionResult GetComments(int postId, int pageNumber = 1)
+        {
+            IEnumerable<CommentVM> comments = _commentService.GetByPage(PageSize, pageNumber, postId).Select(x=>x.ToPLEntity());
+            int count = _commentService.GetCount(postId);
+            PageVM page = new PageVM { Number = pageNumber, Size = PageSize, TotalItems = count };
+            CommentPageVM paging = new CommentPageVM { Page = page, Comments = comments };
+
+            FullPostVM post = new FullPostVM()
+            {
+                Post = _postService.Get(x => x.Id == postId).ToPLEntity(),
+                Comments = count,
+                Likes = _likeService.GetAll(x => x.PostId == postId).Select(x => x.ToPLEntity())
+            };
+
+            comments = comments.Select(x =>
+            {
+                x.UserName = _userService.Get(x.UserId).Name;
+                return x;
+            });
+
+            ViewBag.User = (UserVM)Session["UserInfo"];
+            ViewBag.FullPost = post;
+            ViewBag.Paging = paging;
+
+            return PartialView("CommentPartial");
         }
 
         [HttpPost]
@@ -109,14 +148,19 @@ namespace MVCPL.Controllers
             item.UserId = ((UserVM)Session["UserInfo"]).Id;
             item.Date = DateTime.Now;
             _commentService.Create(item.ToBLLEntity());
-            return RedirectToAction("Index", "Post", new { postId = postId });
+
+            int count = _commentService.GetCount(postId);
+            PageVM page = new PageVM { Size = PageSize, TotalItems = count };
+
+            return GetComments(postId, page.TotalPages);
         }
 
         [Authorize]
         public ActionResult DeleteComment(int id, int postId)
         {
             _commentService.Delete(id);
-            return RedirectToAction("Index", "Post", new { postId = postId });
+
+            return GetComments(postId);
         }
 
         [ActionName("NewPost")]

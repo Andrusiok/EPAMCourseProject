@@ -60,6 +60,7 @@
     <Compile Include="DTO\DALPost.cs" />
     <Compile Include="DTO\DALTag.cs" />
     <Compile Include="DTO\DALUser.cs" />
+    <Compile Include="Interfaces\ICommentRepository.cs" />
     <Compile Include="Interfaces\IDALEntity.cs" />
     <Compile Include="Interfaces\IRepository.cs" />
     <Compile Include="Interfaces\IUnitOfWork.cs" />

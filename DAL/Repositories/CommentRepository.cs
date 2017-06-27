@@ -10,10 +10,11 @@ using ORM;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using LinqKit;
+using DAL.Interfaces.Interfaces;
 
 namespace DAL.Repositories
 {
-    public class CommentRepository : IRepository<DALComment>
+    public class CommentRepository : ICommentRepository
     {
         private DbContext _context;
 
@@ -61,7 +62,7 @@ namespace DAL.Repositories
         {
             List<Comment> ormComments = _context.Set<Comment>().ToList();
 
-            return RetrieveSet(ormComments);
+            return ormComments.Select(x => x.ToDALEntity());
         }
 
         public IEnumerable<DALComment> GetAll(Expression<Func<DALComment, bool>> predicate)
@@ -69,8 +70,20 @@ namespace DAL.Repositories
             Expression<Func<Comment, bool>> lambda = predicate.ConvertExpression();
             List<Comment> ormComments = _context.Set<Comment>().AsExpandable().Where(lambda).ToList();
 
-            return RetrieveSet(ormComments);
+            return ormComments.Select(x=>x.ToDALEntity());
         }
+
+        public IEnumerable<DALComment> GetByPage(int size, int page, int postId)
+        {
+            return _context.Set<Comment>().Where(x => x.PostId == postId)
+                .OrderBy(x=>x.PostId)
+                .Skip((page - 1) * size)
+                .Take(size)
+                .ToList()
+                .Select(x=>x.ToDALEntity());
+        }
+
+        public int GetCount(int postId) => _context.Set<Comment>().Where(x => x.PostId == postId).Count();
 
         public void Update(DALComment item)
         {
@@ -85,16 +98,6 @@ namespace DAL.Repositories
                 comment.UserId = item.UserId;
                 comment.User = _context.Set<User>().Find(item.UserId);
             }
-        }
-
-        private HashSet<DALComment> RetrieveSet(List<Comment> ormComments)
-        {
-            HashSet<DALComment> dalComments = new HashSet<DALComment>();
-
-            foreach (var ormUser in ormComments)
-                dalComments.Add(ormUser.ToDALEntity());
-
-            return dalComments;
         }
     }
 }

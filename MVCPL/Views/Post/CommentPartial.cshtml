@@ -1,0 +1,41 @@
+﻿@using MVCPL.Models.PaginationVM
+@using MVCPL.Models
+@using MVCPL.Infrastracture
+<div style="margin-top: 15px">
+    <div class="btn-group btn-group-xs pull-right" style="margin-top: 2px">
+        @if (ViewBag.User.Id == ViewBag.FullPost.Post.BlogId)
+        {
+            <a href="@Url.Action("EditPost", "Post", new { postId = (int)ViewBag.FullPost.Post.Id })" class="btn btn-warning btn-xs">Edit</a>
+        }
+        <a href="@Url.Action("Index", "Blog", new { userId = (int)ViewBag.FullPost.Post.BlogId })" class="btn btn-primary btn-xs">Back</a>
+        @Ajax.ActionLink("Like", "CreateLike", "Post", new { postId = (int)ViewBag.FullPost.Post.Id }, new AjaxOptions { UpdateTargetId = "likes" }, new { @class = "btn btn-info btn-xs" })
+        @if (ViewBag.User.Role == Role.Administrator || ViewBag.User.Id == ViewBag.FullPost.Post.BlogId)
+            {
+            <a href="@Url.Action("DeletePost", "Post", new { id = (int)ViewBag.FullPost.Post.Id, blogId = (int)ViewBag.FullPost.Post.BlogId })" class="btn btn-danger btn-xs">Delete</a>
+        }
+    </div>
+    <h3>Likes: <span class="badge text-center" style="vertical-align: middle" id="likes">@(Enumerable.Count(ViewBag.FullPost.Likes))</span>  Comments: <span class="badge text-center" style="vertical-align: middle">@ViewBag.FullPost.Comments</span> </h3>
+</div>
+
+<div class="panel-group">
+    @foreach (CommentVM comment in ViewBag.Paging.Comments)
+    {
+        <div class="panel-default">
+            <div class="panel panel-heading">
+                <a href="@Url.Action("Index", "Blog", new { userId = comment.UserId})" class="text-info">@comment.UserName</a> at @comment.Date
+                @if (ViewBag.User.Role == Role.Administrator || ViewBag.User.Id == ViewBag.FullPost.Post.BlogId || ViewBag.User.Id == comment.UserId)
+                {
+                    @Ajax.ActionLink("Delete", "DeleteComment", "Post", new { id = comment.Id, postId = comment.PostId }, new AjaxOptions { UpdateTargetId = "comments" }, new { @class = "btn btn-danger btn-xs pull-right" });
+                }
+            </div>
+            <div class="panel panel-body">@comment.Entity</div>
+        </div>
+    }
+</div>
+<br/>
+
+<div class="text-center" style="width: 100%; margin-top: 20px">
+    <div class="btn-group">
+        @Html.PageLinks((PageVM)ViewBag.Paging.Page, page => Url.Action("GetComments", new { postId = (int)ViewBag.FullPost.Post.Id, pageNumber = page }), new AjaxOptions() { UpdateTargetId = "comments" })
+    </div>
+</div>

@@ -10,13 +10,13 @@ using System.Linq.Expressions;
 
 namespace BLL.Services
 {
-    public class CommentService : IService<CommentEntity>
+    public class CommentService : ICommentService
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        private readonly IRepository<DALComment> _commentRepository;
+        private readonly ICommentRepository _commentRepository;
 
-        public CommentService(IUnitOfWork unitOfWork, IRepository<DALComment> repository)
+        public CommentService(IUnitOfWork unitOfWork, ICommentRepository repository)
         {
             _unitOfWork = unitOfWork;
             _commentRepository = repository;
@@ -47,5 +47,9 @@ namespace BLL.Services
             _commentRepository.Update(item.ToDALEntity());
             _unitOfWork.Commit();
         }
+
+        public int GetCount(int postId) => _commentRepository.GetCount(postId);
+
+        public IEnumerable<CommentEntity> GetByPage(int size, int page, int postId) => _commentRepository.GetByPage(size, page, postId).Select(x => x.ToBLLEntity());
     }
 }
